@@ -8,7 +8,7 @@ def open_no_newline(path):
 keywords = [line for line in open_no_newline("keywords.txt")]
 print(keywords)
 
-box = "#content .box-holder > div.item"
+box = "#content .box-holder > div.item.status-publish"
 box_title = ".item-holder .item-frame .item-panel .entry-title a"
 box_link = ".item-holder .link-holder a"
 
