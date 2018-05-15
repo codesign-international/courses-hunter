@@ -1,9 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-keywords = [
-    "android"
-]
+def open_no_newline(path):
+    for line in open(path):
+        yield line.replace("\r\n", "").replace("\n", "")
+
+keywords = [line for line in open_no_newline("keywords.txt")]
+print(keywords)
 
 box = "#content .box-holder > div.item"
 box_title = ".item-holder .item-frame .item-panel .entry-title a"
