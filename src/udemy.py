@@ -33,9 +33,10 @@ class CourseBox:
 
     def check(self, keywords):
         title = self.course.find_element_by_css_selector(CourseBox.TITLE).text
+        print(title)
         for key in keywords:
             if key in title.lower().split():
-                print(title)
+                print("Course passed")
                 return True
 
         return False
@@ -48,13 +49,52 @@ class CourseBox:
         page.get()
         page.close()
 
+class Session:
+    USER = "#login-form #id_email"
+    PASSWORD = "#login-form #id_password"
+    SUBMIT = "#login-form #submit-id-submit"
+
+    def __init__(self, driver, user, password):
+        self.driver = driver
+        self.user = user
+        self.password = password
+
+    def login(self):
+        user = self.driver.find_element_by_css_selector(Session.USER)
+        user.clear()
+        user.send_keys(self.user)
+        password = self.driver.find_element_by_css_selector(Session.PASSWORD)
+        password.clear()
+        password.send_keys(self.password)
+        submit = self.driver.find_element_by_css_selector(Session.SUBMIT)
+        submit.click()
+
 class Udemy:
+    LOG_IN = "require-auth[data-purpose=header-login] a"
+
     def __init__(self, driver, keywords):
         self.keywords = keywords
         self.driver = driver
         self.main = self.driver.current_window_handle
 
-    def extract_page_courses(self):
+    def login(self, address, user, password):
+        self.driver.get(address)
+        self.driver.find_element_by_css_selector(Udemy.LOG_IN).click()
+        time.sleep(1)
+        self.fill_form(user, password)
+
+    def fill_form(self, user, password):
+        try:
+            Session(self.driver, user, password).login()
+            time.sleep(10)
+        except Exception as e:
+            print("Unable to login", e)
+            exit(1)
+
+    def extract_page_courses(self, address):
+        self.driver.get(address)
+        time.sleep(5)
+
         for course in self.driver.find_elements_by_css_selector(CourseBox.ELEMENT):
             box = CourseBox(course)
             if box.check(self.keywords):

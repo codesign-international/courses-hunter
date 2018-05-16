@@ -11,10 +11,16 @@ def open_no_newline(path):
 keywords = [line for line in open_no_newline("keywords.txt")]
 print(keywords)
 
+user = "dosramosgabriel@gmail.com"
+password = "rustdev2018##"
+
 driver = webdriver.Firefox(executable_path="drivers/geckodriver")
-driver.get("https://udemycoupon.learnviral.com/coupon-category/free100-discount/")
 
 udemy = Udemy(driver, keywords)
-udemy.extract_page_courses()
+udemy.login("https://udemy.com", user, password)
+try:
+    udemy.extract_page_courses("https://udemycoupon.learnviral.com/coupon-category/free100-discount/")
+except Exception as e:
+    print(e)
 
 driver.close()
