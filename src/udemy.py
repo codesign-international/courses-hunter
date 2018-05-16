@@ -14,9 +14,10 @@ class CoursePage:
     def get(self):
         try:
             button = self.driver.find_element_by_css_selector(CoursePage.BUY_BUTTON)
-            print(button.text)
-        except Exception as e:
-            print(e)
+            button.click()
+            time.sleep(5)
+        except Exception:
+            print("Course already purchased")
 
     def close(self):
         self.driver.close()
@@ -33,7 +34,7 @@ class CourseBox:
     def check(self, keywords):
         title = self.course.find_element_by_css_selector(CourseBox.TITLE).text
         for key in keywords:
-            if key in title.lower():
+            if key in title.lower().split():
                 print(title)
                 return True
 
