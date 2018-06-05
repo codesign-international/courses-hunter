@@ -14,29 +14,21 @@ Udemy account
 
 On the project folder
 
-```term
+```
 virtualenv ./
-Selenium: pip install -U selenium
+pip install -U selenium
 ```
 
 the geckodriver that must be put in $PROJECT/drivers/geckodriver
 
 ### Configuration
 
-On the config.py file add the username and password of your udemy account
-
-Also add the number of pages you want the bot to search (a higher number will take more time but will let you execute
-the bot less frequently
-
-Additional to that, on the keywords.txt file add the keywords you want to search about (each keyword in a single line
-and in lowercase)
+Update config.ini with the parameters for your udemy account
+Update keywords.txt with the line-separated keywords to match against
 
 ### Usage
 
-```term
-source bin/activate (virtualenv)
+```
+source bin/activate
 python3 main.py
 ```
-## Deployment
-
-python3 main.py and wait for the bot to do the job
