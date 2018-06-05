@@ -1,8 +1,16 @@
-js
+python
 javascript
+node
+nodejs
 react
-rust
+react native
+aftereffects
+photoshop
 machine learning
+artificial intelligence
 ai
-graph
-android
+tensorflow
+blockchain
+ethereum
+eos
+electron

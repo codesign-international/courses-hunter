@@ -1,16 +1,19 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
-# configuration parameters of the bot
-from config import USER_NAME, USER_PASS, PAGES, KEYWORDS
-
+from configparser import ConfigParser
 from src.udemy import Udemy
+
+def lines(path):
+    for line in open(path):
+        yield line.replace("\r\n", "").replace("\n", "")
+
+config = ConfigParser()
+config.read("config.ini")
 
 driver = webdriver.Firefox(executable_path="drivers/geckodriver")
 
-udemy = Udemy(driver, KEYWORDS)
-udemy.login("https://udemy.com", USER_NAME, USER_PASS)
-udemy.extract("https://udemycoupon.learnviral.com/coupon-category/free100-discount/", PAGES)
+udemy = Udemy(driver, [line for line in lines(config["Bot"]["keywords"])])
+udemy.login("https://udemy.com", config["Account"]["user"], config["Account"]["password"])
+udemy.extract(config["Bot"]["coupons"], int(config["Bot"]["pages"]))
 
 driver.close()
