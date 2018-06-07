@@ -2,6 +2,47 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+class Iterator:
+    """ Class to represent an iteration
+
+    Public Properties:
+        current (int): the current point
+        limit (int): The max point
+
+    Public Methods:
+        inside (checks if the iterator is still on the cycle)
+
+    """
+
+    def __init__(self, current, limit):
+        """ Creates a new iterator
+
+            Args:
+                current (int): the current point
+                limit (int): The max point
+
+            Returns:
+                new Iterator
+
+            Raises:
+                None
+        """
+
+        self.current = current
+        self.limit = limit
+
+    def inside(self):
+        """ Checks if the iterator is still inside
+
+            Returns:
+                bool
+
+            Raises:
+                None
+        """
+
+        return self.current < self.limit
+
 class Courses:
     """ Base class to gestionate the website for the course coupons
 
@@ -39,7 +80,7 @@ class Courses:
         """ Extracts all the courses present that match a keyword for n pages
 
         Args:
-            pages (int): Number of pages to verify
+            pages (int): Number of pages to verify or None to verify all
 
         Returns:
             None
@@ -48,13 +89,18 @@ class Courses:
             None
         """
 
-        for i in range(1, pages + 1):
-            print("Courses of page ", i)
+        if pages is None:
             self.page_courses()
+            while self.next():
+                self.page_courses()
+        else:
+            for i in range(1, pages + 1):
+                print("Courses of page ", i)
+                self.page_courses()
 
-            if not self.next_page(i, pages):
-                print("Not a next page")
-                break
+                if not self.next(Iterator(i, pages)):
+                    print("Not a next page")
+                    break
 
     def page_courses(self):
         """ Extracts all the courses present on a single page
@@ -72,12 +118,11 @@ class Courses:
                 box.get()
                 self.driver.switch_to_window(self.main)
 
-    def next_page(self, current, limit):
+    def next(self, iterator=None):
         """ Checks if there is a next page
 
             Args:
-                current (int): Current page
-                limit (int): Last permitted page
+                iterator (Iterator object): The itetator to keep track
 
             Returns:
                 bool
@@ -88,7 +133,7 @@ class Courses:
 
         try:
             next = self.driver.find_element_by_css_selector(Courses.NEXT_PAGE)
-            if current < limit:
+            if iterator is None or iterator.inside():
                 next.click()
                 time.sleep(5)
         except Exception as e:

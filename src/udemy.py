@@ -131,7 +131,7 @@ class Udemy:
             print("Unable to login", e)
             exit(1)
 
-    def extract(self, address, pages):
+    def extract(self, address, pages=None):
         """ Extracts all the coupons that match a keyword for the udemy account
 
         Args:
