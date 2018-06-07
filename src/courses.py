@@ -2,47 +2,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-class Iterator:
-    """ Class to represent an iteration
-
-    Public Properties:
-        current (int): the current point
-        limit (int): The max point
-
-    Public Methods:
-        inside (checks if the iterator is still on the cycle)
-
-    """
-
-    def __init__(self, current, limit):
-        """ Creates a new iterator
-
-            Args:
-                current (int): the current point
-                limit (int): The max point
-
-            Returns:
-                new Iterator
-
-            Raises:
-                None
-        """
-
-        self.current = current
-        self.limit = limit
-
-    def inside(self):
-        """ Checks if the iterator is still inside
-
-            Returns:
-                bool
-
-            Raises:
-                None
-        """
-
-        return self.current < self.limit
-
 class Courses:
     """ Base class to gestionate the website for the course coupons
 
@@ -89,40 +48,60 @@ class Courses:
             None
         """
 
-        if pages is None:
-            self.page_courses()
-            while self.next():
-                self.page_courses()
-        else:
-            for i in range(1, pages + 1):
-                print("Courses of page ", i)
-                self.page_courses()
+        for (i, courses) in PageCoursesGenerator(self.driver, pages).generate():
+            print("Courses of page ", i)
+            for course in courses:
+                box = CourseBox(self.driver, course)
+                if box.check(self.keywords):
+                    box.get()
+                    self.driver.switch_to_window(self.main)
 
-                if not self.next(Iterator(i, pages)):
-                    print("Not a next page")
-                    break
+class PageCoursesGenerator:
+    """ Class to represent an iteration
 
-    def page_courses(self):
-        """ Extracts all the courses present on a single page
+    Public Properties:
+        driver (WebDriver): the driver to use
+        pages (int): The number of pages or None
+
+    Public Methods:
+        None
+    """
+
+    def __init__(self, driver, pages):
+        """ Creates a new PageCoursesGenerator
 
             Returns:
-                None
+                new PageCoursesGenerator
 
             Raises:
                 None
         """
 
-        for course in self.driver.find_elements_by_css_selector(CourseBox.ELEMENT):
-            box = CourseBox(self.driver, course)
-            if box.check(self.keywords):
-                box.get()
-                self.driver.switch_to_window(self.main)
+        self.driver = driver
+        self.pages = pages
 
-    def next(self, iterator=None):
+    def generate(self):
+        """ Generator function to loop through the pages
+
+            Returns:
+                yields the page number and the courses
+
+            Raises:
+                None
+        """
+
+        current = 1
+        yield (current, self.driver.find_elements_by_css_selector(CourseBox.ELEMENT))
+
+        while self.next(current):
+            current += 1
+            yield (current, self.driver.find_elements_by_css_selector(CourseBox.ELEMENT))
+
+    def next(self, current):
         """ Checks if there is a next page
 
             Args:
-                iterator (Iterator object): The itetator to keep track
+                current (int): The current page
 
             Returns:
                 bool
@@ -131,13 +110,13 @@ class Courses:
                 None
         """
 
+        if self.pages is not None and current >= self.pages:
+            return False
+
         try:
-            next = self.driver.find_element_by_css_selector(Courses.NEXT_PAGE)
-            if iterator is None or iterator.inside():
-                next.click()
-                time.sleep(5)
-        except Exception as e:
-            print("Pages finished ", e)
+            self.driver.find_element_by_css_selector(Courses.NEXT_PAGE).click()
+            time.sleep(5)
+        except Exception:
             return False
 
         return True
