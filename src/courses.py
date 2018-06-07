@@ -191,8 +191,11 @@ class CourseBox:
 
         title = self.course.find_element_by_css_selector(CourseBox.TITLE).text
         print(title)
+        title_array = title.lower().split()
         for key in keywords:
-            if key in title.lower().split():
+            split = key.lower().split()
+
+            if split[0] in title_array and split == title_array[title_array.index(split[0]):(title_array.index(split[0]) + len(split))]:
                 print("Course passed")
                 return True
 
