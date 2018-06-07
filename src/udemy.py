@@ -136,7 +136,7 @@ class Udemy:
 
         Args:
             address (String): the url to the coupons website
-            pages (int): Number of pages to 
+            pages (int): Number of pages to extract or None to avoid a limit
 
         Returns:
             None
