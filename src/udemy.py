@@ -1,6 +1,10 @@
 import time
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from . import SLEEP_APPEAR, SLEEP_LONG
 from .courses import Courses
 
 class Session:
@@ -15,6 +19,7 @@ class Session:
         login (efectuates the login)
     """
 
+    SESSION = "#login-form"
     USER = "#login-form #id_email"
     PASSWORD = "#login-form #id_password"
     SUBMIT = "#login-form #submit-id-submit"
@@ -107,7 +112,9 @@ class Udemy:
 
         self.driver.get(address)
         self.driver.find_element_by_css_selector(Udemy.LOG_IN).click()
-        time.sleep(1)
+        WebDriverWait(self.driver, SLEEP_APPEAR).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, Session.SESSION))
+        )
         self.fill_form(user, password)
 
     def fill_form(self, user, password):
@@ -126,7 +133,7 @@ class Udemy:
 
         try:
             Session(self.driver, user, password).login()
-            time.sleep(10)
+            time.sleep(SLEEP_LONG)
         except Exception as e:
             print("Unable to login", e)
             exit(1)
@@ -146,5 +153,4 @@ class Udemy:
         """
 
         self.driver.get(address)
-        time.sleep(5)
         Courses(self.driver, self.main, self.keywords).extract(pages)

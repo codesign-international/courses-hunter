@@ -1,6 +1,7 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from . import SLEEP_LOAD
 
 class Courses:
     """ Base class to gestionate the website for the course coupons
@@ -115,7 +116,7 @@ class PageCoursesGenerator:
 
         try:
             self.driver.find_element_by_css_selector(Courses.NEXT_PAGE).click()
-            time.sleep(5)
+            time.sleep(SLEEP_LOAD)
         except Exception:
             return False
 
@@ -133,7 +134,6 @@ class CourseBox:
         get (gets the course for the udemy account)
     """
 
-    SLEEP = 7
     ELEMENT = "#content .box-holder > div.item.status-publish"
     TITLE = ".item-holder .item-frame .item-panel .entry-title a"
     LINK = ".item-holder .link-holder a"
@@ -191,7 +191,7 @@ class CourseBox:
         """
 
         self.course.find_element_by_css_selector(CourseBox.LINK).click()
-        time.sleep(CourseBox.SLEEP)
+        time.sleep(SLEEP_LOAD)
         page = CoursePage(self.driver)
         page.focus()
         page.get()
@@ -251,7 +251,7 @@ class CoursePage:
         try:
             button = self.driver.find_element_by_css_selector(CoursePage.BUY_BUTTON)
             button.click()
-            time.sleep(5)
+            time.sleep(SLEEP_LOAD)
         except Exception:
             print("Course already purchased")
 
