@@ -20,7 +20,7 @@ class Session:
     """
 
     SESSION = "#login-form"
-    USER = "#login-form #id_email"
+    USER = "#login-form #form-item-email input"
     PASSWORD = "#login-form #id_password"
     SUBMIT = "#login-form #submit-id-submit"
 
@@ -75,7 +75,7 @@ class Udemy:
         extract (extracts the udemy coupons present on the url)
     """
 
-    LOG_IN = "require-auth[data-purpose=header-login] a"
+    LOG_IN = "button[data-purpose=header-login]"
 
     def __init__(self, driver, keywords):
         """ Creates a new instance of Udemy
