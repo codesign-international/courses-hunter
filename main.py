@@ -10,8 +10,8 @@ def lines(path):
     for line in open(path):
         yield line.replace("\r\n", "").replace("\n", "")
 
-confpath = "config.ini"
-keyspath = "keywords.txt"
+confpath = "config/config.ini"
+keyspath = "config/keywords.txt"
 driverpath = "drivers/geckodriver"
 
 class NoParser(Exception):
