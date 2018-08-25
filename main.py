@@ -179,18 +179,6 @@ def parse(parser, pages, keywords, driverpath):
     driverpath=plac.Annotation("Path to the web driver", "option")
 )
 def main(config=confpath, pages=5, keywords=keyspath, driverpath=driverpath):
-    """ Main script function, it is parsed to generate the CLI options
-
-    See the plac documentation for more details about what this function's
-    arguments are
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
     parser = Config()
     parser.parse(config)
     pages, keywords, driverpath = parse(parser, pages, keywords, driverpath)
