@@ -104,13 +104,16 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# custom ignores
-*.log
-pip-selfcheck.json
+# selenium stuff
 selenium/
+drivers/
+
+# virtual env
 bin/
 include/
-drivers/
-drivers/*
-/.vscode
-/.vscode/*
+lib/
+share/
+pip-selfcheck.json
+
+# application stuff
+*.log
