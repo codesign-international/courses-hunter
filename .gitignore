@@ -117,5 +117,5 @@ pip-selfcheck.json
 
 # application stuff
 *.log
-config/config.ini
-config/keywords.txt
+.config/config.ini
+.config/keywords.txt
