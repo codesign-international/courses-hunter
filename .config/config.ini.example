@@ -1,9 +1,8 @@
 [Account]
-site = https://udemy.com
 user = username
 password = password
 
 [Bot]
-coupons = https://udemycoupon.learnviral.com/coupon-category/free100-discount/
-keywords = keywords.txt
+driver = drivers/geckodriver
+keywords = .config/keywords.txt
 pages = 5
