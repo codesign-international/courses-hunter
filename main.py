@@ -1,9 +1,5 @@
 import plac
-import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from configparser import ConfigParser
-from src import SLEEP_REDO
 from src.udemy import Udemy
 
 import configparser
