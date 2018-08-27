@@ -69,3 +69,7 @@ optional arguments:
 
 See also the list of [contributors](https://github.com/codesign-international/courses-hunter)
 who participated in this project.
+
+## License
+
+This is project is licensed under the MIT license, see [LICENSE](LICENSE) for more details.
