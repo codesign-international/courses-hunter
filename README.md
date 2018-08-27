@@ -35,7 +35,7 @@ ${workspaceRoot}/drivers/geckodriver.
 ## Usage
 
 Right now, you have to specify the parameters needed for the bot to work on
-${workspaceRoot}/config/config.ini. After that put on the ${workspaceRoot}/config/keywords.txt
+${workspaceRoot}/.config/config.ini. After that put on the ${workspaceRoot}/.config/keywords.txt
 file the list of keywords you wish to match the course against.
 
 To launch the bot simply run in your terminal:
@@ -48,19 +48,18 @@ python main.py
 Setting specific bot-execution options is also allowed, here is the current list:
 
 ```bash
-usage: main.py [-h] [-config config/config.ini] [-pages 5]
-               [-keywords config/keywords.txt]
-               [-driverpath drivers/geckodriver] [--version]
+usage: main.py [-h] [-pages PAGES] [-keywords KEYWORDS]
+               [-driverpath DRIVERPATH] [-config .config/config.ini]
+               [--version]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -config config/config.ini
-                        Path to the config file
-  -pages 5              Number of pages to scan
-  -keywords config/keywords.txt
-                        Path to the keywords file
-  -driverpath drivers/geckodriver
+  -pages PAGES          Number of pages to scan
+  -keywords KEYWORDS    Path to the keywords file
+  -driverpath DRIVERPATH
                         Path to the web driver
+  -config .config/config.ini
+                        Path to the config file
   --version, -v         show program's version number and exit
 ```
 
