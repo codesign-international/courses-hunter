@@ -35,5 +35,8 @@ def main(pages, keywords, driverpath, config=".config/config.ini"):
     udemy.extract(COUPONS, options.pages)
     driver.close()
 
+def test_dummy():
+    pass
+
 if __name__ == "__main__":
     plac.call(main, version="0.2.0")
