@@ -20,12 +20,15 @@ def main(pages, keywords, driverpath, config=".config/config.ini"):
     except KeyError:
         print("Invalid configuration file")
         exit(1)
+    except ValueError:
+        print("Configuration value given is invalid")
+        exit(1)
 
     try:
         keys = list(options.keywords())
     except (IOError, FileNotFoundError):
         print("Impossible to open keywords file")
-        exit(1)
+        exit(1)    
 
     driver = webdriver.Firefox(executable_path=options.driver)
     driver.implicitly_wait(2)
