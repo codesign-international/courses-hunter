@@ -1,10 +1,14 @@
 import time
+
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
 from . import SLEEP_APPEAR, SLEEP_LONG
+from .errors import Error, LoginNotFound
 from .courses import Courses
 
 class Session:
@@ -21,7 +25,7 @@ class Session:
 
     SESSION = "#login-form"
     USER = "#login-form #form-item-email input"
-    PASSWORD = "#login-form #id_password"
+    PASSWORD = "#login-form input#id_password"
     SUBMIT = "#login-form #submit-id-submit"
 
     def __init__(self, driver, user, password):
@@ -50,7 +54,7 @@ class Session:
             None
 
         Raises:
-            None
+            NoSuchElementException if the element is not found
         """
 
         user = self.driver.find_element_by_css_selector(Session.USER)
@@ -107,22 +111,36 @@ class Udemy:
             None
 
         Raises:
-            None
+            LoginNotFound if any of the css calls fails
         """
 
         self.driver.get(address)
-        self.driver.find_element_by_css_selector(Udemy.LOG_IN).click()
-        WebDriverWait(self.driver, SLEEP_APPEAR).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, Session.SESSION))
-        )
-        self.fill_form(user, password)
 
-    def fill_form(self, user, password):
+        try:
+            logbutton = self.driver.find_element_by_css_selector(Udemy.LOG_IN)
+        except NoSuchElementException:
+            raise LoginNotFound("Unable to find login button DOM element")
+        else:
+            logbutton.click()
+
+        try:
+            WebDriverWait(self.driver, SLEEP_APPEAR).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, Session.SESSION))
+            )
+        except TimeoutException:
+            raise LoginNotFound("Unable to find login form DOM element")
+
+        try:
+            self.__fill(user, password)
+        except NoSuchElementException:
+            raise LoginNotFound("Unable to find the form related DOM elements")
+
+    def __fill(self, user, password):
         """ Fills the login form on udemy
 
             Args:
-                user (String): the user to put
-                password (String): the password to put
+                user (str): the user to put
+                password (str): the password to put
 
             Returns:
                 None
@@ -131,12 +149,8 @@ class Udemy:
                 None
         """
 
-        try:
-            Session(self.driver, user, password).login()
-            time.sleep(SLEEP_LONG)
-        except Exception as e:
-            print("Unable to login", e)
-            exit(1)
+        Session(self.driver, user, password).login()
+        time.sleep(SLEEP_LONG)
 
     def extract(self, address, pages=None):
         """ Extracts all the coupons that match a keyword for the udemy account
