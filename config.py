@@ -42,7 +42,10 @@ class Config:
             new Config
 
         Raises:
-            None
+            configparser.Error if unable to parse the file
+            KeyError if the needed key for the bot does not exist
+                the key will only be searched if not provided on the CLI
+            ValueError if the specified option is invalid
         """
 
         self.parser = ConfigParser()
@@ -67,8 +70,14 @@ class Config:
             self.driver = str(driverpath)
 
     def keywords(self):
-        """
+        """ Parses the keywords file and gets the keywords specified by the user
 
+        Returns:
+            List of keywords
+
+        Raises:
+            FileNotFoundError if unable to find the file
+            IOError if there is any problem while reading the file
         """
 
         return lines(self.keys)
