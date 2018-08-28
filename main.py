@@ -1,6 +1,7 @@
 import plac
 from selenium import webdriver
 from src.udemy import Udemy
+from src.errors import Error, LoginNotFound
 
 import configparser
 from config import UDEMY, COUPONS, Config
@@ -30,13 +31,28 @@ def main(pages, keywords, driverpath, config=".config/config.ini"):
         print("Impossible to open keywords file")
         exit(1)    
 
+    code = 0 # Exit code of the App
+
     driver = webdriver.Firefox(executable_path=options.driver)
     driver.implicitly_wait(2)
 
     udemy = Udemy(driver, keys)
-    udemy.login(UDEMY, options.user, options.password)
-    udemy.extract(COUPONS, options.pages)
-    driver.close()
+    try:
+        udemy.login(UDEMY, options.user, options.password)
+        udemy.extract(COUPONS, options.pages)
+    except LoginNotFound:
+        print("Error while communicating with the website DOM")
+        code = 1
+    except Error:
+        print("Unknown custom error found while running the app")
+        code = 1
+    except:
+        print("Unknown error found while running the app")
+        code = 1
+    finally:
+        driver.close()
+
+    exit(code)
 
 def test_dummy():
     pass
